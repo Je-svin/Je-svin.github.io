@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jesvin Jose - Portfolio</title>
 
-  <!-- Babel for in-browser JSX transpilation -->
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone for in-browser JSX transpilation -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
@@ -52,7 +56,7 @@
     .nav-links { display: flex; gap: 4px; }
     .nav-links a { padding: 9px 10px; color: var(--muted); font-size: 13px; transition: .25s; }
     .nav-links a:hover { color: white; }
-    .menu-btn { display: none; background: none; border: 0; color: white; }
+    .menu-btn { display: none; background: none; border: 0; color: white; cursor: pointer; }
 
     .section {
       width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 110px 0;
@@ -85,7 +89,7 @@
       font-weight: 700; font-size: 14px; transition: .25s; cursor: pointer;
     }
     .btn:hover { transform: translateY(-3px); }
-    .btn.primary { background: linear-gradient(110deg, var(--accent), #6555f4); border: 0; }
+    .btn.primary { background: linear-gradient(110deg, var(--accent), #6555f4); border: 0; color: white; }
     .btn.secondary { background: rgba(255,255,255,.04); }
     .quick-contact { display: flex; flex-wrap: wrap; gap: 18px; }
     .quick-contact a { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 13px; }
@@ -101,14 +105,14 @@
     @keyframes morph { 50% { border-radius: 55% 45% 40% 60% / 50% 55% 45% 50%; transform: translateY(-8px); } }
     .photo-frame img, .photo-placeholder {
       width: 100%; height: 100%; object-fit: cover; border-radius: inherit;
-      background: #0d1220; display: grid; place-items: center; text-align: center;
+      background: #0d1220; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
     }
-    .initials { font: 700 100px "Space Grotesk"; color: rgba(255,255,255,.12); }
-    .photo-placeholder p { position: absolute; margin-top: 190px; color: white; }
-    .photo-placeholder small { position: absolute; margin-top: 245px; color: var(--muted); }
+    .initials { font: 700 80px "Space Grotesk"; color: rgba(255,255,255,.12); }
+    .photo-placeholder p { margin: 10px 0 0 0; color: white; }
+    .photo-placeholder small { color: var(--muted); }
     .photo-upload {
       position: absolute; bottom: 55px; z-index: 5; padding: 9px 14px; border: 1px solid var(--line);
-      background: rgba(8,11,20,.8); border-radius: 10px; font-size: 12px; cursor: pointer;
+      background: rgba(8,11,20,.8); border-radius: 10px; font-size: 12px; cursor: pointer; color: white;
     }
     .photo-upload input { display: none; }
     .orbit { position: absolute; border: 1px solid rgba(139,124,255,.25); border-radius: 50%; }
@@ -160,7 +164,7 @@
 
     .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
     .project-card { padding: 25px; border-radius: 20px; transition: .3s; display: flex; flex-direction: column; min-height: 370px; }
-    .project-top { display: flex; justify-content: space-between; color: var(--accent); }
+    .project-top { display: flex; justify-content: space-between; align-items: center; color: var(--accent); }
     .project-top span { font: 700 14px "Space Grotesk"; }
     .project-card h3 { font: 600 24px "Space Grotesk"; margin: 40px 0 10px; }
     .project-card p { color: var(--muted); font-size: 14px; }
@@ -251,18 +255,28 @@
   </style>
 </head>
 <body>
-  <!-- Container where React will mount the App -->
   <div id="root"></div>
 
-  <!-- React code compiled dynamically using Babel and ESM imports -->
-  <script type="text/babel" data-type="module">
-    import React, { useEffect, useState } from "https://esm.sh/react@18";
-    import { createRoot } from "https://esm.sh/react-dom@18/client";
-    import {
-      ArrowDown, ArrowUpRight, BriefcaseBusiness, CheckCircle2, Code2,
-      Download, ExternalLink, Github, GraduationCap, Linkedin, Mail,
-      Menu, Phone, Send, Sparkles, X, ArrowUp
-    } from "https://esm.sh/lucide-react";
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    // SVG Icons
+    const Sparkles = ({ size = 16 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.28 1.28L3 12l5.8 1.9a2 2 0 0 1 1.28 1.28L12 21l1.9-5.8a2 2 0 0 1 1.28-1.28L21 12l-5.8-1.9a2 2 0 0 1-1.28-1.28Z"/></svg>;
+    const ArrowDown = ({ size = 18 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>;
+    const ArrowUpRight = ({ size = 18 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg>;
+    const ArrowUp = ({ size = 18 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>;
+    const Mail = ({ size = 16 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>;
+    const Phone = ({ size = 16 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
+    const CheckCircle2 = ({ size = 18 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>;
+    const GraduationCap = ({ size = 22 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>;
+    const Code2 = ({ size = 22 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 16 4-4-4-4M6 8l-4 4 4 4"/></svg>;
+    const BriefcaseBusiness = ({ size = 22 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 12h.01M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2M22 13a18.15 18.15 0 0 1-20 0M2 6h20v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"/></svg>;
+    const Github = ({ size = 22 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4M9 18c-4.51 2-5-2-7-2"/></svg>;
+    const ExternalLink = ({ size = 15 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>;
+    const Linkedin = ({ size = 18 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>;
+    const Send = ({ size = 17 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>;
+    const Menu = ({ size = 24 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>;
+    const X = ({ size = 24 }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>;
 
     const roles = [
       "BTech Computer Science Graduate",
@@ -477,7 +491,7 @@
           <SectionTitle kicker="03 — Skills" title="Tools I work with." text="A growing technical toolkit built through coursework, projects and hands-on practice." />
           <div className="skills-grid">
             {skills.map(([name, category], i) => (
-              <div className="skill-card glass reveal" style={{ "--i": i }} key={name}>
+              <div className="skill-card glass reveal" key={name}>
                 <span className="skill-number">0{i + 1}</span>
                 <Code2 size={25} />
                 <h3>{name}</h3>
@@ -494,7 +508,7 @@
         <section id="projects" className="section">
           <SectionTitle kicker="04 — Projects" title="Things I've built." text="Projects that demonstrate my interest in Python, automation, web data and practical problem solving." />
           <div className="projects-grid">
-            {projects.map((project, i) => (
+            {projects.map((project) => (
               <article className="project-card glass reveal" key={project.title}>
                 <div className="project-top">
                   <span>{project.icon}</span>
@@ -616,7 +630,7 @@
       }, []);
 
       return (
-        <>
+        <React.Fragment>
           <Navbar />
           <main>
             <Hero />
@@ -633,12 +647,12 @@
             <p>© 2026 Jesvin Jose. All Rights Reserved.</p>
             <a href="#home" className="back-top" aria-label="Back to top"><ArrowUp size={18} /></a>
           </footer>
-        </>
+        </React.Fragment>
       );
     }
 
     const rootElement = document.getElementById("root");
-    const root = createRoot(rootElement);
+    const root = ReactDOM.createRoot(rootElement);
     root.render(<App />);
   </script>
 </body>
